@@ -1,0 +1,20 @@
+{
+  "name": "kushbitx-agent-bounty",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI-agent integration for the KushBitx SDK bounty free acceptance path",
+  "scripts": {
+    "agent": "node src/agent.mjs",
+    "smoke": "node src/smoke.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@kushbitx/sdk": "^0.1.0",
+    "@openai/agents": "^0.4.0",
+    "zod": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
