@@ -1,0 +1,36 @@
+name: RustChain 398 verification
+
+on:
+  push:
+    branches:
+      - rustchain-398-verification
+  workflow_dispatch:
+
+jobs:
+  mock-signature-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RustChain current main
+        uses: actions/checkout@v4
+        with:
+          repository: Scottcjn/Rustchain
+          ref: main
+          path: Rustchain
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install RustChain requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r Rustchain/requirements.txt
+
+      - name: Run current Mock Signature guard regression
+        working-directory: Rustchain
+        env:
+          RC_ADMIN_KEY: "00000000000000000000000000000000"
+          DB_PATH: ":memory:"
+        run: |
+          python -m unittest node.tests.test_mock_signature_guard -v
