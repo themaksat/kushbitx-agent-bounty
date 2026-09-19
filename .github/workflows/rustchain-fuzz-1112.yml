@@ -1,0 +1,27 @@
+name: RustChain Bounty 1112 Fuzz
+
+on:
+  push:
+    branches: [rustchain-fuzz-1112]
+    paths:
+      - "rustchain-fuzz-1112/**"
+      - ".github/workflows/rustchain-fuzz-1112.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run bounded authorized fuzz campaign
+        run: python rustchain-fuzz-1112/fuzz_attest.py
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustchain-fuzz-1112
+          path: artifacts/
+          if-no-files-found: error
