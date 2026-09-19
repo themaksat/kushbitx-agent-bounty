@@ -10,14 +10,15 @@ This page maps the public submission directly to the acceptance criteria and to 
 - The model receives the three tool definitions and chooses tool calls through the agent runtime; the production agent path is not a fixed three-call script.
 - Duplicate calls, failed tools, missing successful results, or excessive turns fail verification.
 - Verified sanitized model-directed evidence: [evidence/run-output.txt](./run-output.txt).
-- Passing public workflow: https://github.com/u4350637864-stack/kushbitx-agent-bounty/actions/runs/35462320034
+- Passing public workflow: https://github.com/u4350637864-stack/kushbitx-agent-bounty/actions/runs/35468040914
 
 Verified evidence includes:
 
 ```
 AGENT_RUN_VERIFIED
-runtime=OpenAI Agents SDK + local Ollama/qwen3:1.7b
-model_directed_tool_calls={"kushbitx_preview_token":1,"kushbitx_evaluate_spend":1,"kushbitx_discover_x402_challenge":1}
+runtime=OpenAI Agents SDK
+model=qwen3:1.7b
+tool_calls={"kushbitx_preview_token":1,"kushbitx_evaluate_spend":1,"kushbitx_discover_x402_challenge":1}
 private_key_requested=false
 payment_signed=false
 payment_submitted=false
@@ -99,7 +100,7 @@ The GitHub Actions workflow:
 7. updates sanitized evidence only after a successful run.
 
 Latest clean model-directed proof used for the bounty:
-https://github.com/u4350637864-stack/kushbitx-agent-bounty/actions/runs/35462320034
+https://github.com/u4350637864-stack/kushbitx-agent-bounty/actions/runs/35468040914
 
 ## Safety boundary
 
