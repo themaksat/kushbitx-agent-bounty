@@ -1,5 +1,7 @@
 # KushBitx AI agent: free acceptance path
 
+[![RustChain bounty participant](https://img.shields.io/badge/RustChain-bounty%20participant-orange)](https://rustchain.org)
+
 An OpenAI Agents SDK agent chooses and invokes three tools backed by the published `@kushbitx/sdk`: free token preview, advisory SpendGuard evaluation, and unsigned x402 challenge discovery. There is no signing, payment, private-key, recovery, policy-mutation, or transaction-submission tool.
 
 SpendGuard is advisory. Enforcement belongs to the signing or execution layer. A discovered payment challenge is not a payment or a paid report.
