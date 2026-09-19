@@ -32,5 +32,6 @@ jobs:
         env:
           RC_ADMIN_KEY: "00000000000000000000000000000000"
           DB_PATH: ":memory:"
+          PYTHONPATH: "node"
         run: |
-          python -m unittest node.tests.test_mock_signature_guard -v
+          python node/tests/test_mock_signature_guard.py -v
