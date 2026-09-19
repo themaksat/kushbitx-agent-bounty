@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm install --ignore-scripts
+      - run: npm ci --ignore-scripts
       - run: npm test
       - run: node --check src/agent.mjs
       - run: node --check src/smoke.mjs
@@ -43,7 +43,10 @@ jobs:
           OLLAMA_BASE_URL: http://127.0.0.1:11434/v1
           OLLAMA_MODEL: qwen3:1.7b
           OPENAI_AGENTS_DISABLE_TRACING: '1'
-        run: npm run agent | tee evidence/run-output.txt
+        run: |
+          set -o pipefail
+          npm run agent | tee evidence/run-output.tmp
+          mv evidence/run-output.tmp evidence/run-output.txt
 
       - name: Commit verified sanitized evidence
         if: github.event_name != 'pull_request'

@@ -10,10 +10,10 @@
     "test": "node --test"
   },
   "dependencies": {
-    "@kushbitx/sdk": "^0.1.0",
-    "@openai/agents": "^0.17.0",
-    "openai": "^7.2.0",
-    "zod": "^4.0.0"
+    "@kushbitx/sdk": "0.1.0",
+    "@openai/agents": "0.17.2",
+    "openai": "7.20.0",
+    "zod": "4.6.5"
   },
   "engines": {
     "node": ">=22"

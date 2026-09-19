@@ -1,76 +1,74 @@
-# KushBitx AI Agent — Free Acceptance Path
+# KushBitx AI agent: free acceptance path
 
-This repository is a minimal AI-agent integration for the KushBitx SDK bounty.
+An OpenAI Agents SDK agent chooses and invokes three tools backed by the published `@kushbitx/sdk`: free token preview, advisory SpendGuard evaluation, and unsigned x402 challenge discovery. There is no signing, payment, private-key, recovery, policy-mutation, or transaction-submission tool.
 
-## Safety boundary
+SpendGuard is advisory. Enforcement belongs to the signing or execution layer. A discovered payment challenge is not a payment or a paid report.
 
-This project intentionally exposes only three operations:
+## Reproduce from a clean clone
 
-1. free token preview;
-2. free SpendGuard evaluation;
-3. x402 payment-challenge discovery that **stops at HTTP 402**.
+Requires Node.js 22+ and npm. The lockfile pins the tested dependency graph.
 
-It exposes **no private-key, signing, payment, recovery, policy-mutation, or transaction-submission capability**.
-
-SpendGuard is treated as **advisory policy evaluation only**. Enforcement belongs to the signing/execution layer.
-
-## Requirements
-
-- Node.js 22+
-- For the AI-directed run only: `OPENAI_API_KEY`
-
-## Install
-
-```bash
-npm install
-```
-
-This installs the published `@kushbitx/sdk` package plus the OpenAI Agents SDK.
-
-## Test
-
-```bash
+```sh
+git clone https://github.com/u4350637864-stack/kushbitx-agent-bounty.git
+cd kushbitx-agent-bounty
+npm ci --ignore-scripts
 npm test
-```
-
-Tests cover:
-
-- the three-tool boundary;
-- accidental exposure of payment/signing surfaces;
-- free token preview delegation;
-- complete SpendGuard input shape;
-- x402 challenge discovery;
-- upstream failures;
-- missing/unexpected HTTP 402 challenges.
-
-## Free SDK smoke run
-
-```bash
 npm run smoke
 ```
 
-This makes no payment and signs nothing.
+`npm test` uses the real published SDK with mocked HTTP responses and invokes the actual agent tools. It covers valid requests, invalid inputs, HTTP/transport failures, malformed JSON, missing or conflicting x402 challenges, safety flags, duplicate/missing tool calls, bounded preview retries, and sanitized evidence.
 
-## Actual AI-agent-directed run
+`npm run smoke` calls the live free endpoints deterministically. It is a connectivity/schema check, **not evidence of an AI-directed run**. Both commands exit nonzero on failure.
 
-```bash
-export OPENAI_API_KEY=...
+## Zero-cost AI-directed run with local Ollama
+
+Install [Ollama](https://ollama.com), start its local server, and pull a tool-capable model:
+
+```sh
+ollama pull qwen3:1.7b
+```
+
+Bash:
+
+```sh
+OLLAMA_BASE_URL=http://127.0.0.1:11434/v1 OLLAMA_MODEL=qwen3:1.7b npm run agent
+```
+
+PowerShell:
+
+```powershell
+$env:OLLAMA_BASE_URL = 'http://127.0.0.1:11434/v1'
+$env:OLLAMA_MODEL = 'qwen3:1.7b'
 npm run agent
 ```
 
-The AI agent is instructed to invoke all three safe tools exactly once and then return a PASS/FAIL summary. No private key or funded wallet is used.
+An existing local tool-capable model can be selected with `OLLAMA_MODEL`. `revenue-swarm:latest` is the owner's custom local model, not a model other contributors need to download. Ollama runs locally without a model API key or paid API calls. Hardware affects speed, and model behavior can vary.
 
-## Evidence
+The runtime passes all three tool definitions to the model; it does not execute a hardcoded sequence. Each accepts only `{}` and uses fixed demo inputs. A duplicate call, tool failure, missing result, or more than eight agent turns fails the run. SDK requests time out after 30 seconds. Only transient token-preview failures receive bounded retries (three attempts total).
 
-After a live run, save sanitized output in `evidence/run-output.txt`. Remove API keys, personal information, wallet addresses used for testing, and any other secrets before committing.
+The optional existing OpenAI path uses `OPENAI_API_KEY` when `OLLAMA_BASE_URL` is unset; that provider may charge for inference and is not needed for the free path. Tracing is disabled for both providers.
 
-## Bounty mapping
+## Validation and evidence
 
-- Public `@kushbitx/sdk`: dependency in `package.json`
-- AI agent runtime: `src/agent.mjs`
-- Free token preview: `kushbitx_preview_token`
-- SpendGuard evaluation: `kushbitx_evaluate_spend`
-- x402 challenge only: `kushbitx_discover_x402_challenge`
-- Reproducible instructions: this README
-- Tests: `test/sdk-adapter.test.mjs`
-- No signing/payment path exposed: asserted in code and tests
+The adapter validates a real preview response, the returned SpendGuard decision/advisory flags, and the HTTP 402 body's Base USDC offers against the decoded `PAYMENT-REQUIRED` header. Non-402 responses are rejected by the SDK. Merely receiving a truthy object is not success.
+
+`evidence/run-output.txt` contains a successful model-directed run. Output is an allowlist of validated fields: no raw responses, wallet/test addresses, encoded payment headers, API keys, raw exceptions, or model-generated prose. The final summary is explicitly derived from validated tool results, because model prose can contradict those results. This does not replace the model's tool selection: the model still chooses each call through the Agents SDK.
+
+To refresh evidence in Bash without replacing the last successful file on failure:
+
+```sh
+npm run agent > evidence/run-output.tmp && mv evidence/run-output.tmp evidence/run-output.txt
+```
+
+In PowerShell:
+
+```powershell
+npm run agent > evidence/run-output.tmp
+if ($LASTEXITCODE -eq 0) { Move-Item -Force evidence/run-output.tmp evidence/run-output.txt }
+```
+
+GitHub Actions installs from the lockfile, runs the automated tests, and on main runs a local Ollama model against the live free endpoints. It updates the evidence only after success. Public API availability and local model behavior are external dependencies; failed runs must not be described as verified success.
+
+## Bounty status
+
+Submission for [kushBitxHQ/kushbitx-sdk#1](https://github.com/kushBitxHQ/kushbitx-sdk/issues/1). The issue advertises 50 USDC on Base after maintainer acceptance and requires assignment. Technical completion does not establish assignment, acceptance, escrow funding, or payment. At review on 2026-09-19 the issue was open and unassigned. No reward or payment is claimed here.
