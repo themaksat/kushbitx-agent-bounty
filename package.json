@@ -12,6 +12,7 @@
   "dependencies": {
     "@kushbitx/sdk": "^0.1.0",
     "@openai/agents": "^0.17.0",
+    "openai": "^7.2.0",
     "zod": "^4.0.0"
   },
   "engines": {
