@@ -74,3 +74,11 @@ GitHub Actions installs from the lockfile, runs the automated tests, and on main
 ## Bounty status
 
 Submission for [kushBitxHQ/kushbitx-sdk#1](https://github.com/kushBitxHQ/kushbitx-sdk/issues/1). The issue advertises 50 USDC on Base after maintainer acceptance and requires assignment. Technical completion does not establish assignment, acceptance, escrow funding, or payment. At review on 2026-09-19 the issue was open and unassigned. No reward or payment is claimed here.
+
+
+## RustChain Shorts package
+
+A separate original publication package for RustChain bounty #16601 lives at:
+[rustchain-shorts-mock-signature/](./rustchain-shorts-mock-signature/)
+
+It explains the public mock-signature production guard using RustChain source plus our reproducible CI evidence. This is a separate bounty deliverable and does not imply RustChain affiliation with the KushBitx submission.
