@@ -1,0 +1,11 @@
+LIVE EVIDENCE PENDING
+
+Run `npm run smoke` and `npm run agent` from a clean clone, then replace this file with sanitized output.
+
+Required statements for the final evidence:
+- Token preview: PASS/FAIL
+- SpendGuard evaluation: PASS/FAIL
+- x402 challenge discovered: PASS/FAIL
+- No private key requested, read, stored, or committed
+- No payment signed or submitted
+- SpendGuard is advisory; enforcement belongs to the signing/execution layer
