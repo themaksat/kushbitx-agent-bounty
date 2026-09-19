@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">RustChain Proof-of-Antiquity explainer</title>
+  <desc id="desc">A one-page visual flowchart explaining that RustChain rewards one physical CPU vote weighted by hardware antiquity, verifies real hardware with fingerprint checks, and reduces VM or emulator rewards.</desc>
+  <defs>
+    <style>
+      .bg { fill: #0b1020; }
+      .panel { fill: #151d33; stroke: #65d6ad; stroke-width: 3; rx: 24; }
+      .panel2 { fill: #111827; stroke: #9ad7ff; stroke-width: 3; rx: 24; }
+      .danger { fill: #2a1320; stroke: #ff8fa3; stroke-width: 3; rx: 24; }
+      .title { font: 700 44px Arial, Helvetica, sans-serif; fill: #ffffff; }
+      .subtitle { font: 400 22px Arial, Helvetica, sans-serif; fill: #cbd5e1; }
+      .h { font: 700 27px Arial, Helvetica, sans-serif; fill: #ffffff; }
+      .body { font: 400 20px Arial, Helvetica, sans-serif; fill: #dbeafe; }
+      .small { font: 400 17px Arial, Helvetica, sans-serif; fill: #b7c4d8; }
+      .tag { font: 700 18px Arial, Helvetica, sans-serif; fill: #0b1020; }
+      .arrow { stroke: #facc15; stroke-width: 6; fill: none; marker-end: url(#arrowhead); }
+      .thin { stroke: #94a3b8; stroke-width: 3; fill: none; }
+      .chip { fill: #65d6ad; rx: 14; }
+      .coin { fill: #facc15; stroke: #fff4a3; stroke-width: 4; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#facc15" />
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="800"/>
+  <text x="60" y="70" class="title">RustChain: Proof-of-Antiquity in 60 seconds</text>
+  <text x="60" y="106" class="subtitle">Real physical machines earn votes; older, harder-to-fake silicon earns more weight.</text>
+
+  <rect x="60" y="150" width="310" height="180" class="panel"/>
+  <text x="88" y="198" class="h">1. Miner starts</text>
+  <text x="88" y="235" class="body">Install and run:</text>
+  <rect x="88" y="254" width="240" height="42" class="chip"/>
+  <text x="108" y="282" class="tag">pip install clawrtc</text>
+  <text x="88" y="316" class="small">The miner prepares an attestation.</text>
+
+  <rect x="445" y="150" width="310" height="180" class="panel2"/>
+  <text x="473" y="198" class="h">2. Prove real hardware</text>
+  <text x="473" y="235" class="body">Fingerprint checks look for</text>
+  <text x="473" y="264" class="body">timing, CPU, ROM, and</text>
+  <text x="473" y="293" class="body">environment signals.</text>
+  <text x="473" y="316" class="small">Goal: real silicon, not a VM farm.</text>
+
+  <rect x="830" y="150" width="310" height="180" class="panel"/>
+  <text x="858" y="198" class="h">3. Vote is weighted</text>
+  <text x="858" y="235" class="body">Base rule:</text>
+  <text x="858" y="264" class="body">1 physical CPU = 1 vote</text>
+  <text x="858" y="293" class="body">Antiquity multiplier adjusts it.</text>
+  <text x="858" y="316" class="small">Vintage hardware gets stronger weight.</text>
+
+  <path d="M370 240 C400 240, 415 240, 445 240" class="arrow"/>
+  <path d="M755 240 C785 240, 800 240, 830 240" class="arrow"/>
+
+  <rect x="130" y="410" width="420" height="205" class="panel"/>
+  <text x="160" y="458" class="h">Real vintage / exotic hardware</text>
+  <text x="160" y="498" class="body">PowerPC, old x86, SPARC, 68K,</text>
+  <text x="160" y="528" class="body">and other physical machines have</text>
+  <text x="160" y="558" class="body">unique timing and hardware signals.</text>
+  <circle cx="470" cy="515" r="46" class="coin"/>
+  <text x="446" y="524" class="tag">RTC</text>
+  <text x="160" y="590" class="small">Result: eligible to earn according to its verified weight.</text>
+
+  <rect x="650" y="410" width="420" height="205" class="danger"/>
+  <text x="680" y="458" class="h">VMs / emulators / clones</text>
+  <text x="680" y="498" class="body">Uniform timers, shared ROMs, or</text>
+  <text x="680" y="528" class="body">farm-like fingerprints are flagged.</text>
+  <text x="680" y="558" class="body">The system is designed to make</text>
+  <text x="680" y="588" class="body">cheap fake scale earn little or nothing.</text>
+
+  <path d="M985 330 C985 370, 930 385, 860 410" class="arrow"/>
+  <path d="M985 330 C885 370, 505 380, 340 410" class="arrow"/>
+
+  <line x1="600" y1="650" x2="600" y2="710" class="thin"/>
+  <text x="155" y="705" class="subtitle">Why it matters: the network rewards hardware diversity and makes mass virtual farming harder.</text>
+  <text x="155" y="740" class="small">Original SVG explainer by u4350637864-stack for RustChain bounty #13954. Sources listed in README.md.</text>
+</svg>
