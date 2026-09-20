@@ -1,0 +1,30 @@
+[
+  {
+    "name": "clean_rfp_missing_insurance",
+    "sender_authentication": "pass",
+    "payment_request": null,
+    "conflicting_amendment": false,
+    "missing": ["EUR 1M professional liability insurance"],
+    "expected_status": "needs_clarification"
+  },
+  {
+    "name": "spoofed_urgent_registration_fee",
+    "sender_authentication": "unknown",
+    "payment_request": {
+      "amount": 250,
+      "currency": "USDC",
+      "destination": "email-supplied-wallet"
+    },
+    "conflicting_amendment": false,
+    "missing": [],
+    "expected_status": "blocked_sender_authentication"
+  },
+  {
+    "name": "conflicting_deadline_amendment",
+    "sender_authentication": "pass",
+    "payment_request": null,
+    "conflicting_amendment": true,
+    "missing": [],
+    "expected_status": "needs_clarification"
+  }
+]
