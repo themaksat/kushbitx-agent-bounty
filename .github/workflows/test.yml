@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - 'evidence/run-output.txt'\n      - 'evidence/moltrust-taskmarket.json'
+      - 'evidence/run-output.txt'
   pull_request:
   workflow_dispatch:
 
@@ -24,14 +24,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Generate one-shot MolTrust task evidence
-        if: github.event_name != 'pull_request'
-        run: |
-          if [ ! -f evidence/moltrust-taskmarket.json ]; then
-            node scripts/moltrust-taskmarket.mjs
-          else
-            echo "MolTrust task evidence already exists; skipping registration."
-          fi
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: node --check src/agent.mjs
@@ -67,7 +59,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add evidence/run-output.txt evidence/moltrust-taskmarket.json
+          git add evidence/run-output.txt
           git diff --cached --quiet && exit 0
           git commit -m "Add verified model-directed agent evidence"
           git push
