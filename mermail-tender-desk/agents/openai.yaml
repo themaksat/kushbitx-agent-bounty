@@ -1,0 +1,11 @@
+interface:
+  display_name: "Mermail Tender Desk"
+  short_description: "Turn tender/RFP email into safe bid/no-bid decision packets"
+  default_prompt: "Use $mermail-tender-desk to triage this tender or RFP from Mermail, extract evidence-linked requirements and deadlines, and prepare a decision packet. Do not submit, pay, accept terms, or send email without my exact approval."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "mermail"
+      description: "Mermail workspace and mailbox MCP server"
+      transport: "streamable_http"
+      url: "https://console.mermail.app/mcp"
