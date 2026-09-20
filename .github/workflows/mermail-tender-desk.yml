@@ -25,3 +25,5 @@ jobs:
         run: node mermail-tender-desk/tests/validate.mjs
       - name: Run synthetic tender demo assertions
         run: node mermail-tender-desk/tests/demo.test.mjs
+      - name: Run adversarial procurement safety scenarios
+        run: node mermail-tender-desk/tests/adversarial.test.mjs
