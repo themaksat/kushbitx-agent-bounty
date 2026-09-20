@@ -1,0 +1,42 @@
+{
+  "email": {
+    "id": "email_demo_117",
+    "thread_id": "thread_demo_117",
+    "sender_authentication": {
+      "status": "pass"
+    },
+    "subject": "RFP 2026-117 — Automated Procurement Intelligence Pilot",
+    "buyer": "Example Municipal Procurement Office",
+    "received_at": "2026-09-20T09:00:00Z"
+  },
+  "evidence": {
+    "source_url": "https://procurement.example.invalid/rfp/2026-117",
+    "deadline": "2026-09-29T12:00:00Z",
+    "clarification_deadline": "2026-09-23T12:00:00Z",
+    "value": 45000,
+    "currency": "EUR",
+    "geography": "EU",
+    "participation_fee": null,
+    "submission_channel": "buyer procurement portal",
+    "eligibility": [
+      {
+        "requirement": "company registration",
+        "status": "verified"
+      },
+      {
+        "requirement": "2 references",
+        "status": "verified"
+      },
+      {
+        "requirement": "EUR 1M professional liability insurance",
+        "status": "unknown"
+      }
+    ],
+    "mandatory_documents": [
+      "technical response",
+      "pricing template",
+      "signed declaration"
+    ],
+    "ambiguity": "Whether equivalent non-EU professional liability insurance is accepted."
+  }
+}
