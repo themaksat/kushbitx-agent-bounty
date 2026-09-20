@@ -23,3 +23,5 @@ jobs:
           node-version: "22"
       - name: Validate companion skill
         run: node mermail-tender-desk/tests/validate.mjs
+      - name: Run synthetic tender demo assertions
+        run: node mermail-tender-desk/tests/demo.test.mjs
