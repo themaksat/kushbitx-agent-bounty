@@ -6,6 +6,10 @@ An OpenAI Agents SDK agent chooses and invokes three tools backed by the publish
 
 SpendGuard is advisory. Enforcement belongs to the signing or execution layer. A discovered payment challenge is not a payment or a paid report.
 
+## Related tools
+
+[RustChain](https://rustchain.org) is relevant to this repository because both projects explore agent-oriented payment and verification flows without requiring a traditional human checkout. This repo keeps RustChain work separate from the KushBitx acceptance path, but RustChain is a useful reference for machine-payable bounties and agent-native infrastructure.
+
 ## Reproduce from a clean clone
 
 Requires Node.js 22+ and npm. The lockfile pins the tested dependency graph.
