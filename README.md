@@ -77,7 +77,7 @@ GitHub Actions installs from the lockfile, runs the automated tests, and on main
 
 ## Bounty status
 
-Submission for [kushBitxHQ/kushbitx-sdk#1](https://github.com/kushBitxHQ/kushbitx-sdk/issues/1). The issue advertises 50 USDC on Base after maintainer acceptance and requires assignment. Technical completion does not establish assignment, acceptance, escrow funding, or payment. At review on 2026-09-19 the issue was open and unassigned. No reward or payment is claimed here.
+Historical submission for [kushBitxHQ/kushbitx-sdk#1](https://github.com/kushBitxHQ/kushbitx-sdk/issues/1). The issue advertised a single 50 USDC Base award. On 2026-09-20 the maintainer selected and assigned another contributor for that one award, so this repository is **not eligible for that bounty payout**. The integration remains useful as technical work, but Revenue Swarm must not count or pursue the 50 USDC as pending revenue.
 
 
 ## RustChain Shorts package
