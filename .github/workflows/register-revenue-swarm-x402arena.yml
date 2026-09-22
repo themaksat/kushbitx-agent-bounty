@@ -1,0 +1,25 @@
+name: Register Revenue Swarm on x402 Arena
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/register-revenue-swarm-x402arena.yml
+
+permissions:
+  contents: read
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Register live tender pulse
+        run: |
+          set -u
+          base="https://eu-tender-x402-v3-production.up.railway.app"
+          discovery=$(curl -sS -L --max-time 20 "$base/.well-known/x402")
+          wallet=$(printf '%s' "$discovery" | jq -r '.payTo')
+          payload=$(jq -nc             --arg name "revenue-swarm-eu-tender-v3"             --arg endpoint "$base/api/tender-pulse"             --arg walletAddress "$wallet"             '{name:$name,endpoint:$endpoint,niche:"procurement-intelligence",description:"Live EU public procurement opportunity intelligence from TED, paid per request with x402 USDC.",walletAddress:$walletAddress}')
+          curl -sS -L --max-time 30 -X POST https://core.x402arena.gg/register             -H 'content-type: application/json'             --data "$payload"             -w '\nHTTP_STATUS=%{http_code}\n' || true
