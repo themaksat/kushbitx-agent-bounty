@@ -6,6 +6,10 @@ An OpenAI Agents SDK agent chooses and invokes three tools backed by the publish
 
 SpendGuard is advisory. Enforcement belongs to the signing or execution layer. A discovered payment challenge is not a payment or a paid report.
 
+## Find EU Tender Opportunities
+
+[Free EU tender sample](https://eu-tender-x402-v3-production.up.railway.app/preview) · [Buyer guide](docs/find-eu-tender-opportunities.md) · [Revenue Swarm storefront](https://revenue-swarm.lovable.app/?utm_source=github&utm_medium=organic&utm_campaign=repo_readme)
+
 ## Related live x402 service: Revenue Swarm
 
 The same owner also operates **Revenue Swarm EU Tender Intelligence**, a separate live x402 service for ranked EU public-procurement opportunities sourced from TED. It is not part of the KushBitx bounty codebase; the links below are provided as a related production example of machine-payable data access.
