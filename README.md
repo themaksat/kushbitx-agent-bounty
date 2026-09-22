@@ -6,6 +6,19 @@ An OpenAI Agents SDK agent chooses and invokes three tools backed by the publish
 
 SpendGuard is advisory. Enforcement belongs to the signing or execution layer. A discovered payment challenge is not a payment or a paid report.
 
+## Related live x402 service: Revenue Swarm
+
+The same owner also operates **Revenue Swarm EU Tender Intelligence**, a separate live x402 service for ranked EU public-procurement opportunities sourced from TED. It is not part of the KushBitx bounty codebase; the links below are provided as a related production example of machine-payable data access.
+
+- Human storefront: https://revenue-swarm.lovable.app
+- Free live tender preview: https://eu-tender-x402-v3-production.up.railway.app/preview
+- x402 discovery: https://eu-tender-x402-v3-production.up.railway.app/.well-known/x402
+- OpenAPI: https://eu-tender-x402-v3-production.up.railway.app/openapi.json
+- Agent/developer quickstart: https://eu-tender-x402-v3-production.up.railway.app/quickstart
+- LLM discovery: https://eu-tender-x402-v3-production.up.railway.app/llms.txt
+
+Current paid resources are 0.001 USDC, 0.01 USDC, and 0.10 USDC per request on Base. Test and probe traffic is not presented as customer revenue.
+
 ## Related tools
 
 [RustChain](https://rustchain.org) is relevant to this repository because both projects explore agent-oriented payment and verification flows without requiring a traditional human checkout. This repo keeps RustChain work separate from the KushBitx acceptance path, but RustChain is a useful reference for machine-payable bounties and agent-native infrastructure.
