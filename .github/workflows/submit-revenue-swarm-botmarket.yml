@@ -12,11 +12,11 @@ jobs:
   submit:
     runs-on: ubuntu-latest
     steps:
-      - name: Submit live x402 service
+      - name: Validate live x402 service listing
         shell: bash
         run: |
           set -euo pipefail
           curl --fail-with-body --silent --show-error \
             -X POST "https://botmarket.bot/v1/submit" \
             -H "Content-Type: application/json" \
-            --data '{"kind":"service","url":"https://eu-tender-x402-v3-production.up.railway.app"}'
+            --data '{"kind":"service","url":"https://eu-tender-x402-v3-production.up.railway.app","name":"Revenue Swarm EU Tender Intelligence","description":"Ranked EU public-procurement opportunity data sourced from TED, available to agents and developers via x402 on Base USDC.","price":"0.001 USDC","dry_run":true}'
