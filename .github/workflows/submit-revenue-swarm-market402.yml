@@ -1,0 +1,25 @@
+name: Submit Revenue Swarm to Market402
+
+on:
+  push:
+    paths:
+      - ".github/workflows/submit-revenue-swarm-market402.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit v3 paid resources
+        shell: bash
+        run: |
+          set -u
+          for resource in             "https://eu-tender-x402-v3-production.up.railway.app/api/tender-pulse"             "https://eu-tender-x402-v3-production.up.railway.app/api/tenders"             "https://eu-tender-x402-v3-production.up.railway.app/api/tender-intelligence"
+          do
+            code="$(curl -sS -L -o /tmp/m402.json -w '%{http_code}'               -X POST "https://market402.com/submit"               -H "content-type: application/json"               --data "$(jq -nc --arg resource "$resource" '{resource:$resource}')" || true)"
+            echo "$resource -> HTTP $code"
+            cat /tmp/m402.json || true
+            echo
+          done
