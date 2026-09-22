@@ -1,0 +1,22 @@
+name: Submit Revenue Swarm to BotMarket
+
+on:
+  push:
+    paths:
+      - ".github/workflows/submit-revenue-swarm-botmarket.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit live x402 service
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            -X POST "https://botmarket.bot/v1/submit" \
+            -H "Content-Type: application/json" \
+            --data '{"kind":"service","url":"https://eu-tender-x402-v3-production.up.railway.app"}'
