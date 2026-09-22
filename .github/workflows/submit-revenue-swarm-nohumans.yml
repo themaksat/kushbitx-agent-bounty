@@ -1,0 +1,25 @@
+name: Submit Revenue Swarm to NoHumans
+
+on:
+  push:
+    paths:
+      - ".github/workflows/submit-revenue-swarm-nohumans.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit three Revenue Swarm paid resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          submit() {
+            curl --fail-with-body --silent --show-error               -X POST "https://nohumans.directory/v1/listings"               -H "Content-Type: application/json"               --data "$1"
+            echo
+          }
+          submit '{"name":"Revenue Swarm — EU Tender Pulse","description":"Strongest matching live EU public-procurement opportunity with buyer, deadline and official source evidence.","endpoint_url":"https://eu-tender-x402-v3-production.up.railway.app/api/tender-pulse","category":"data.procurement","price_amount":0.001,"price_currency":"USDC","chains":["base"],"sample_query":"https://eu-tender-x402-v3-production.up.railway.app/preview"}'
+          submit '{"name":"Revenue Swarm — EU Tender Search","description":"Ranked EU tender search for suppliers, consultants and agents with buyer, value, deadline and official source evidence.","endpoint_url":"https://eu-tender-x402-v3-production.up.railway.app/api/tenders","category":"data.procurement","price_amount":0.01,"price_currency":"USDC","chains":["base"],"sample_query":"https://eu-tender-x402-v3-production.up.railway.app/preview"}'
+          submit '{"name":"Revenue Swarm — EU Tender Intelligence","description":"Deeper ranked EU public-procurement shortlist sourced from TED for business-development and agent workflows.","endpoint_url":"https://eu-tender-x402-v3-production.up.railway.app/api/tender-intelligence","category":"data.procurement","price_amount":0.10,"price_currency":"USDC","chains":["base"],"sample_query":"https://eu-tender-x402-v3-production.up.railway.app/preview"}'
