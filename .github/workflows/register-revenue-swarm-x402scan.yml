@@ -1,0 +1,20 @@
+name: Register Revenue Swarm on x402scan
+
+on:
+  push:
+    paths:
+      - ".github/workflows/register-revenue-swarm-x402scan.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Register origin with x402scan
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error             -X POST "https://www.x402scan.com/api/trpc/public.resources.registerFromOrigin"             -H "Content-Type: application/json"             --data '{"json":{"origin":"https://eu-tender-x402-v3-production.up.railway.app"}}'
+          echo
