@@ -13,15 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Register Revenue Swarm endpoints
+      - name: Register remaining Revenue Swarm endpoints
         shell: bash
         run: |
           set -euo pipefail
           EMAIL="$(git log -1 --format=%ae)"
-          register() {
-            curl --fail-with-body --silent --show-error               -X POST "https://api.x402dash.com/v1/register"               -H "Content-Type: application/json"               --data "$1"
-            echo
-          }
-          register "{\"url\":\"https://eu-tender-x402-v3-production.up.railway.app/api/tender-pulse\",\"name\":\"Revenue Swarm EU Tender Pulse\",\"description\":\"Strongest matching live EU public-procurement opportunity with buyer, deadline and official source evidence.\",\"category\":\"Procurement/Data\",\"tags\":[\"eu-tenders\",\"procurement\",\"public-sector\",\"ted\",\"x402\"],\"contact\":\"$EMAIL\"}"
-          register "{\"url\":\"https://eu-tender-x402-v3-production.up.railway.app/api/tenders\",\"name\":\"Revenue Swarm EU Tender Search\",\"description\":\"Ranked EU tender search for suppliers, consultants and agents with buyer, value, deadline and official source evidence.\",\"category\":\"Procurement/Data\",\"tags\":[\"eu-tenders\",\"procurement\",\"supplier-opportunities\",\"ted\",\"x402\"],\"contact\":\"$EMAIL\"}"
-          register "{\"url\":\"https://eu-tender-x402-v3-production.up.railway.app/api/tender-intelligence\",\"name\":\"Revenue Swarm EU Tender Intelligence\",\"description\":\"Deeper ranked EU public-procurement shortlist sourced from TED for business-development and agent workflows.\",\"category\":\"Procurement/Data\",\"tags\":[\"eu-tenders\",\"procurement-intelligence\",\"business-development\",\"ted\",\"x402\"],\"contact\":\"$EMAIL\"}"
+          curl --fail-with-body --silent --show-error             -X POST "https://api.x402dash.com/v1/register"             -H "Content-Type: application/json"             --data "{\"url\":\"https://eu-tender-x402-v3-production.up.railway.app/api/tenders\",\"name\":\"Revenue Swarm EU Tender Search\",\"description\":\"Ranked EU tender search for suppliers, consultants and agents with buyer, value, deadline and official source evidence.\",\"category\":\"Data\",\"tags\":[\"eu-tenders\",\"procurement\",\"supplier-opportunities\",\"ted\",\"x402\"],\"contact\":\"$EMAIL\"}"
+          echo
+          curl --fail-with-body --silent --show-error             -X POST "https://api.x402dash.com/v1/register"             -H "Content-Type: application/json"             --data "{\"url\":\"https://eu-tender-x402-v3-production.up.railway.app/api/tender-intelligence\",\"name\":\"Revenue Swarm EU Tender Intelligence\",\"description\":\"Deeper ranked EU public-procurement shortlist sourced from TED for business-development and agent workflows.\",\"category\":\"Data\",\"tags\":[\"eu-tenders\",\"procurement-intelligence\",\"business-development\",\"ted\",\"x402\"],\"contact\":\"$EMAIL\"}"
