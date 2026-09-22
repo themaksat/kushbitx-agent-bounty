@@ -1,0 +1,23 @@
+name: Inspect Revenue Swarm 402 body
+
+on:
+  push:
+    paths:
+      - ".github/workflows/inspect-revenue-swarm-402.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect unpaid response
+        run: |
+          set -u
+          for url in             https://eu-tender-x402-v3-production.up.railway.app/api/tender-pulse             https://eu-tender-x402-v3-production.up.railway.app/api/tenders             https://eu-tender-x402-v3-production.up.railway.app/api/tender-intelligence
+          do
+            echo "=== $url ==="
+            curl -sS -i --max-time 20 "$url" || true
+            echo
+          done
