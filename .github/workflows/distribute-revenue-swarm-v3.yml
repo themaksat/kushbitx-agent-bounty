@@ -1,0 +1,53 @@
+name: Distribute Revenue Swarm v3
+
+on:
+  push:
+    paths:
+      - ".github/workflows/distribute-revenue-swarm-v3.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push live v3 to public agent directories
+        shell: bash
+        run: |
+          set -u
+          base="https://eu-tender-x402-v3-production.up.railway.app"
+
+          echo "=== LIVE DISCOVERY ==="
+          discovery="$(curl -sS -L --max-time 30 "$base/.well-known/x402" || true)"
+          printf '%s
+' "$discovery" | jq . || true
+          payto="$(printf '%s' "$discovery" | jq -r '.payTo // empty' 2>/dev/null || true)"
+
+          echo "=== AGENT402 ==="
+          curl -sS -L --max-time 30 -X POST "https://agent402.tools/api/index/register"             -H "content-type: application/json"             --data "{"origin":"$base"}"             -w "\nHTTP_STATUS=%{http_code}\n" || true
+
+          echo "=== MARKET402 ==="
+          for path in /api/tender-pulse /api/tenders /api/tender-intelligence; do
+            resource="$base$path"
+            echo "SUBMIT $resource"
+            curl -sS -L --max-time 30 -X POST "https://market402.com/submit"               -H "content-type: application/json"               --data "$(jq -nc --arg resource "$resource" '{resource:$resource}')"               -w "\nHTTP_STATUS=%{http_code}\n" || true
+          done
+
+          echo "=== NOHUMANS ==="
+          submit_nohumans() {
+            local name="$1" path="$2" desc="$3" price="$4"
+            payload="$(jq -nc               --arg name "$name"               --arg description "$desc"               --arg endpoint_url "$base$path"               --argjson price_amount "$price"               '{name:$name,description:$description,endpoint_url:$endpoint_url,category:"data.procurement",price_amount:$price_amount,price_currency:"USDC",chains:["base"]}')"
+            curl -sS -L --max-time 30 -X POST "https://api.nohumans.directory/v1/listings"               -H "content-type: application/json"               --data "$payload"               -w "\nHTTP_STATUS=%{http_code}\n" || true
+          }
+          submit_nohumans "Revenue Swarm — EU Tender Pulse" "/api/tender-pulse"             "Strongest matching live EU public-procurement opportunity with buyer, deadline and official source evidence." 0.001
+          submit_nohumans "Revenue Swarm — EU Tender Search" "/api/tenders"             "Ranked EU tender search with buyer, value, deadline and official source evidence." 0.01
+          submit_nohumans "Revenue Swarm — EU Tender Intelligence" "/api/tender-intelligence"             "Deeper ranked EU public-procurement shortlist sourced from TED." 0.10
+
+          echo "=== X402 ARENA ==="
+          if [ -n "$payto" ]; then
+            arena="$(jq -nc               --arg name "revenue-swarm-tender-v3"               --arg endpoint "$base/api/tender-pulse"               --arg walletAddress "$payto"               '{name:$name,endpoint:$endpoint,niche:"procurement-intelligence",description:"Live EU public procurement and B2B opportunity intelligence from TED, paid per request with x402 USDC.",walletAddress:$walletAddress}')"
+            curl -sS -L --max-time 30 -X POST "https://core.x402arena.gg/register"               -H "content-type: application/json"               --data "$arena"               -w "\nHTTP_STATUS=%{http_code}\n" || true
+          else
+            echo "No payTo in discovery; skipped x402 Arena."
+          fi
