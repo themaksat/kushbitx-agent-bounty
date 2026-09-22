@@ -1,0 +1,32 @@
+name: Submit Revenue Swarm to x402 List
+
+on:
+  push:
+    paths:
+      - ".github/workflows/submit-revenue-swarm-x402-list.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Submit Revenue Swarm
+        shell: bash
+        run: |
+          set -euo pipefail
+          EMAIL="$(git log -1 --format=%ae)"
+          curl --fail-with-body --silent --show-error \
+            -X POST "https://x402-list.com/api/v1/submit" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            --data-urlencode "submission_type=service" \
+            --data-urlencode "service_name=Revenue Swarm EU Tender Intelligence" \
+            --data-urlencode "service_url=https://eu-tender-x402-v3-production.up.railway.app" \
+            --data-urlencode "website_url=https://revenue-swarm.lovable.app" \
+            --data-urlencode "email=$EMAIL" \
+            --data-urlencode "category=Data" \
+            --data-urlencode "description=Ranked EU public-procurement opportunity data sourced from TED for agents, developers, suppliers and consultants. x402 v2 on Base USDC." \
+            --data-urlencode $'endpoints=/api/tender-pulse\n/api/tenders\n/api/tender-intelligence' \
+            --data-urlencode "notes=Free preview: https://eu-tender-x402-v3-production.up.railway.app/preview | x402 discovery: https://eu-tender-x402-v3-production.up.railway.app/.well-known/x402 | OpenAPI: https://eu-tender-x402-v3-production.up.railway.app/openapi.json | llms.txt: https://eu-tender-x402-v3-production.up.railway.app/llms.txt"
