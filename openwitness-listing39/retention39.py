@@ -83,8 +83,11 @@ def done(tok,m):
     return False
 
 def changes(cohort,active,active2):
-    since=START_MS+7*DAY-1; latest=CUT_MS+15*DAY
+    # Full public snapshot from the beginning. Do not rely on ID-mode's
+    # documented "since is advisory" behavior for completeness evidence.
+    since=0; latest=CUT_MS+15*DAY
     pt=ct="init"; pm=cm=None; pages=ps=cs=0; snap_now=None
+    post_ids=set(); comment_ids=set()
     while True:
         q=urllib.parse.urlencode({"since":since,"posts_since":pt,"comments_since":ct,"nulls_since":"done"})
         d=get("/changes?"+q); pages+=1
@@ -92,7 +95,14 @@ def changes(cohort,active,active2):
         np,nc=d.get("next_posts_since",pt),d.get("next_comments_since",ct)
         if pm is None:pm=snapmax(np)
         if cm is None:cm=snapmax(nc)
-        posts,comms=d.get("posts",[]),d.get("comments",[]); ps+=len(posts); cs+=len(comms)
+        posts,comms=d.get("posts",[]),d.get("comments",[])
+        ps+=len(posts); cs+=len(comms)
+        for row in posts:
+            if row.get("id") in post_ids: raise RuntimeError("duplicate post id in lossless snapshot")
+            post_ids.add(row.get("id"))
+        for row in comms:
+            if row.get("id") in comment_ids: raise RuntimeError("duplicate comment id in lossless snapshot")
+            comment_ids.add(row.get("id"))
         for row in posts+comms:
             h,t=row.get("author"),row.get("created_at"); c=cohort.get(h)
             if not c or not isinstance(t,int) or t>=latest:continue
@@ -104,7 +114,12 @@ def changes(cohort,active,active2):
         if pages%10==0:print("changes",pages,ps,cs,pd,cd,file=sys.stderr)
         if pd and cd:break
         if pages>500:raise RuntimeError("unbounded changes walk")
-    return {"mode":"lossless ID snapshot","pages":pages,"rows_streamed":{"posts":ps,"comments":cs},"snapshot_max_ids":{"posts":pm,"comments":cm},"snapshot_started_utc":snap_now,"drained":True}
+    if ps!=len(post_ids) or cs!=len(comment_ids): raise RuntimeError("changes snapshot uniqueness check failed")
+    return {"mode":"lossless ID snapshot from since=0","pages":pages,
+            "rows_streamed":{"posts":ps,"comments":cs},
+            "unique_ids":{"posts":len(post_ids),"comments":len(comment_ids)},
+            "snapshot_max_ids":{"posts":pm,"comments":cm},
+            "snapshot_started_utc":snap_now,"drained":True}
 
 def wilson(k,n,z=1.959963984540054):
     p=k/n; zz=z*z; den=1+zz/n; c=(p+zz/(2*n))/den
@@ -155,6 +170,7 @@ def main():
     print("key binds",file=sys.stderr); ev,ea=binds(); fb=first_binds(ev)
     cohort=[c for c in cs if START_MS<=c["created_at"]<CUT_MS]; cmap={c["handle"]:c for c in cohort}
     gb,cb=boundary(cs,fb),boundary(cohort,fb)
+    stats_before=get("/stats").get("society",{})
     act,act2=set(),set(); print("changes",file=sys.stderr); cha=changes(cmap,act,act2)
     t1,t2=table(cohort,fb,gb["threshold_ms"],act),table(cohort,fb,gb["threshold_ms"],act2)
     alt=None
@@ -165,11 +181,20 @@ def main():
                 "primary door-vs-none result is window-sensitive" if ex0 else
                 "primary door-vs-none interval includes zero; no detectable difference at 95%")
     stats=get("/stats").get("society",{})
+    sp,sc=cha["rows_streamed"]["posts"],cha["rows_streamed"]["comments"]
+    bp,bc=stats_before.get("posts"),stats_before.get("comments")
+    ep,ec=stats.get("posts"),stats.get("comments")
+    posts_reconciled=isinstance(bp,int) and isinstance(ep,int) and bp<=sp<=ep
+    comments_reconciled=isinstance(bc,int) and isinstance(ec,int) and bc<=sc<=ec
+    cha["endpoint_total_bracket"]={"before":{"posts":bp,"comments":bc},"after":{"posts":ep,"comments":ec}}
+    cha["reconciled_to_endpoint_totals"]={"posts":posts_reconciled,"comments":comments_reconciled}
+    if not (posts_reconciled and comments_reconciled):
+        raise RuntimeError(f"changes snapshot did not reconcile to endpoint totals: streamed posts={sp} comments={sc}, before={bp}/{bc}, after={ep}/{ec}")
     res={"listing":39,"run_utc":now.isoformat().replace("+00:00","Z"),"population":{"start":START,"cutoff_exclusive":CUTOFF,"n":len(cohort)},
          "windows":{"primary":"[reg+7d,reg+14d)","sensitivity":"[reg+8d,reg+15d)"},
          "boundary":{"primary_scope":"global public first-bind delays","global":gb,"cohort":cb},
          "primary":t1,"sensitivity":t2,"alternate_cohort_boundary":alt,
-         "completeness":{"citizens":ca,"key_binds":ea,"changes":cha,"stats_end":stats},
+         "completeness":{"citizens":ca,"key_binds":ea,"changes":cha,"stats_before":stats_before,"stats_end":stats},
          "falsifier_predeclared":falsifier,"conclusion":conclusion,
          "limits":["association not causation","sought is defined by a post-registration event"]}
     (out/"results.json").write_text(json.dumps(res,indent=2,sort_keys=True)+"\n")
@@ -196,7 +221,8 @@ Cohort diagnostic: {cb['low_ms']} ms -> {cb['high_ms']} ms ({cb['ratio']:.4f}x),
 ## Completeness
 citizens: {ca['enumerated']}/{ca['endpoint_total']} in {ca['pages']} pages, reconciled={ca['reconciled']}
 key-bind events: {ea['enumerated']}/{ea['endpoint_total']} in {ea['pages']} pages, reconciled={ea['reconciled']}
-changes: lossless ID snapshot, {cha['pages']} pages, posts={cha['rows_streamed']['posts']}, comments={cha['rows_streamed']['comments']}, max IDs={cha['snapshot_max_ids']}, drained={cha['drained']}
+changes: full lossless ID snapshot from since=0, {cha['pages']} pages, posts={cha['rows_streamed']['posts']}, comments={cha['rows_streamed']['comments']}, unique={cha['unique_ids']}, max IDs={cha['snapshot_max_ids']}, drained={cha['drained']}
+changes reconciliation: {cha['reconciled_to_endpoint_totals']}; stats before posts/comments={stats_before.get('posts')}/{stats_before.get('comments')}, stats after={stats.get('posts')}/{stats.get('comments')}
 stats at end: citizens={stats.get('citizens')}, posts={stats.get('posts')}, comments={stats.get('comments')}
 
 ## Predeclared falsifier
