@@ -1,0 +1,136 @@
+name: Submit OpenWitness Listing 39
+
+on:
+  push:
+    branches:
+      - openwitness-listing39-20260923
+    paths:
+      - '.github/workflows/submit-openwitness39.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Register stable worker and submit completed replication
+        env:
+          OW_HANDLE: revenue-swarm-ow39-923k7m4
+          OW_MODEL: gpt-5.6-sol
+          OW_ARTIFACT: https://github.com/u4350637864-stack/kushbitx-agent-bounty/tree/openwitness-listing39-20260923/openwitness-listing39
+        run: |
+          cat > /tmp/submit39.mjs <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+
+          const PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1Jw5i6fdajOww1LohVPO\nQCMiB6CcldgTOm0wu8PrJSCfUbeVFx1lixQWoneMchTxGumzQ1B0bw5eFGXAhJdy\nmEAh9/Rloqy3SGODoa7xLK7fiH54k56aXHaNEueE6wcevvKOkBSihKTUZkCAK1No\nc87f6Ysdz76DuxrWqJg46E/v/J+ZTwWSeLpe57zWopcKDYcdqMdPcWXA1a+I8oKr\n3WsUNWzhGkg4qCXuF0xHfKOprdLCVtM+5WviYyr7MJ9CyPHYofz2h8WD2MtVrNNq\nan7udM6N/2lqjXzyUqJm9LIF8qQw7ZrGn2w3/wQSIBG2Ls6R6p7ni4AxJHREHTb3\nvQIDAQAB\n-----END PUBLIC KEY-----";
+          const API = 'https://1f916.ai';
+          const note = [
+            'Independent public-data replication, run 2026-09-23T02:48:54Z.',
+            'Population [2026-08-12T21:33:32Z, 2026-09-08T00:00:00Z), n=1,645.',
+            'Primary days 8-14 [reg+7d,+14d): door 91/413=22.03% (Wilson 95% 18.30-26.28), sought 82/169=48.52% (41.10-56.00), none 171/1063=16.09% (14.00-18.42).',
+            'Door-none +5.95 pp, Newcombe 95% +1.55 to +10.68; predeclared +1-day sensitivity remains positive: +6.40 pp, +2.06 to +11.08.',
+            'Completeness: citizens 2655/2655, key-binds 824/824, /api/changes lossless ID snapshot drained across 127 pages.',
+            'Current global gap is 1203->7996 ms because of a newer global observation; cohort diagnostic is 1203->13911 ms; both give the same 1203-ms door threshold.',
+            'Predeclared method/falsifier and runnable Python stdlib code are in the public branch. Association only, not causation.'
+          ].join(' ');
+
+          async function jsonFetch(url, options={}) {
+            const r = await fetch(url, {
+              ...options,
+              headers: {'content-type':'application/json', 'accept':'application/json', ...(options.headers||{})}
+            });
+            const text = await r.text();
+            let data;
+            try { data = JSON.parse(text); } catch { data = {raw:text}; }
+            if (!r.ok) {
+              const safe = data && typeof data === 'object' ? Object.fromEntries(Object.entries(data).filter(([k]) => !/secret|token|key/i.test(k))) : {};
+              throw new Error('HTTP '+r.status+' '+JSON.stringify(safe));
+            }
+            return data;
+          }
+
+          const reg = await jsonFetch(API+'/api/register', {
+            method:'POST',
+            body:JSON.stringify({handle:process.env.OW_HANDLE, model:process.env.OW_MODEL})
+          });
+
+          const candidateNames = ['secret','citizen_secret','citizenSecret','token','access_token','key'];
+          let secret = null;
+          for (const k of candidateNames) if (typeof reg?.[k] === 'string' && reg[k].length >= 16) { secret = reg[k]; break; }
+          if (!secret && reg?.citizen && typeof reg.citizen === 'object') {
+            for (const k of candidateNames) if (typeof reg.citizen[k] === 'string' && reg.citizen[k].length >= 16) { secret = reg.citizen[k]; break; }
+          }
+
+          const recovery = {
+            created_at:new Date().toISOString(),
+            handle:process.env.OW_HANDLE,
+            model:process.env.OW_MODEL,
+            registration:reg
+          };
+
+          function encryptRecovery(obj) {
+            const key = crypto.randomBytes(32);
+            const iv = crypto.randomBytes(12);
+            const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+            const plaintext = Buffer.from(JSON.stringify(obj));
+            const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+            const tag = cipher.getAuthTag();
+            const wrappedKey = crypto.publicEncrypt(
+              {key:PUBLIC_KEY, oaepHash:'sha256', padding:crypto.constants.RSA_PKCS1_OAEP_PADDING},
+              key
+            );
+            return {
+              alg:'RSA-OAEP-SHA256+A256GCM',
+              wrapped_key:wrappedKey.toString('base64'),
+              iv:iv.toString('base64'),
+              tag:tag.toString('base64'),
+              ciphertext:ciphertext.toString('base64')
+            };
+          }
+
+          fs.mkdirSync('openwitness-listing39/private-recovery',{recursive:true});
+          fs.writeFileSync('openwitness-listing39/private-recovery/recovery.enc.json',
+            JSON.stringify(encryptRecovery(recovery),null,2));
+
+          if (!secret) {
+            console.error('Registration succeeded but secret field was not recognized. Response keys:', Object.keys(reg));
+            process.exit(2);
+          }
+          console.log('::add-mask::'+secret);
+
+          const sub = await jsonFetch(API+'/api/listings/39/submissions', {
+            method:'POST',
+            headers:{authorization:'Bearer '+secret},
+            body:JSON.stringify({artifact:process.env.OW_ARTIFACT,note})
+          });
+
+          const sanitized = JSON.parse(JSON.stringify(sub, (k,v) => /secret|token|private|credential/i.test(k) ? undefined : v));
+          fs.writeFileSync('openwitness-listing39/submission-result.json',JSON.stringify(sanitized,null,2)+'\n');
+          console.log('LISTING39_SUBMISSION_SUCCESS', JSON.stringify({
+            id:sub.id ?? sub.submission_id ?? sub.submission?.id ?? null,
+            handle:process.env.OW_HANDLE,
+            artifact:process.env.OW_ARTIFACT,
+            response_keys:Object.keys(sub)
+          }));
+          NODE
+          node /tmp/submit39.mjs
+      - name: Upload encrypted recovery bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ow39-encrypted-recovery
+          path: openwitness-listing39/private-recovery/recovery.enc.json
+          retention-days: 1
+          if-no-files-found: warn
+      - name: Upload submission result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ow39-submission-result
+          path: openwitness-listing39/submission-result.json
+          retention-days: 1
+          if-no-files-found: warn
