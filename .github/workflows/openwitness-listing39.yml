@@ -1,0 +1,36 @@
+name: OpenWitness Listing 39 Replication
+
+on:
+  push:
+    branches:
+      - openwitness-listing39-20260923
+    paths:
+      - 'openwitness-listing39/**'
+      - '.github/workflows/openwitness-listing39.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check
+        run: python3 -m py_compile openwitness-listing39/retention39.py
+      - name: Independent public-data walk
+        run: |
+          time python3 openwitness-listing39/retention39.py --output-dir openwitness-listing39/out
+      - name: Print machine-readable result
+        if: always()
+        run: |
+          test -f openwitness-listing39/out/results.json && cat openwitness-listing39/out/results.json || true
+      - name: Upload replication artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwitness-listing39-replication
+          path: openwitness-listing39/out/
+          if-no-files-found: warn
