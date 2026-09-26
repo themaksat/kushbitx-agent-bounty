@@ -17,6 +17,7 @@ Revenue Swarm also operates a live done-for-you creative service for ecommerce, 
 
 - Main creative storefront: https://revenue-swarm.com/?utm_source=github&utm_medium=organic&utm_campaign=public_repo
 - Crypto creative storefront: https://revenue-swarm.com/crypto?utm_source=github&utm_medium=organic&utm_campaign=public_repo
+- Full creative-services reference: [docs/revenue-swarm-creative-services.md](docs/revenue-swarm-creative-services.md)
 - Quick Creative Pack: $9 one-time
 - Creative Test Pack: $29 one-time
 - Weekly Creative Drops: $79/month
