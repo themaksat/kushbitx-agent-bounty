@@ -62,3 +62,16 @@ The same owner also operates separate EU procurement research and machine-readab
 - Crypto creative services: https://revenue-swarm.com/crypto
 - Procurement tools: https://revenue-swarm.com/free-match
 - Developer/API page: https://revenue-swarm.com/developers
+
+
+## Buyer-intent service pages
+
+Revenue Swarm maintains dedicated pages for common creative-service needs:
+
+- Ad creative service: https://revenue-swarm.com/ad-creative-service
+- Ecommerce ad creatives: https://revenue-swarm.com/ecommerce-ad-creatives
+- SaaS ad creatives: https://revenue-swarm.com/saas-ad-creatives
+- Static ad design service: https://revenue-swarm.com/static-ad-design-service
+- Crypto / Web3 creative services: https://revenue-swarm.com/crypto
+
+These pages describe the same scoped creative-service offers for different buyer use cases. They do not represent separate companies or guaranteed-performance products.
