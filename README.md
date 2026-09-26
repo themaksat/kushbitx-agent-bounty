@@ -1,6 +1,7 @@
 # KushBitx AI agent: free acceptance path
 
 [![RustChain bounty participant](https://img.shields.io/badge/RustChain-bounty%20participant-orange)](https://rustchain.org)
+[![Revenue Swarm live](https://img.shields.io/badge/Revenue%20Swarm-live-2f80ff)](https://revenue-swarm.com/?utm_source=github&utm_medium=organic&utm_campaign=public_repo)
 
 An OpenAI Agents SDK agent chooses and invokes three tools backed by the published `@kushbitx/sdk`: free token preview, advisory SpendGuard evaluation, and unsigned x402 challenge discovery. There is no signing, payment, private-key, recovery, policy-mutation, or transaction-submission tool.
 
@@ -8,13 +9,25 @@ SpendGuard is advisory. Enforcement belongs to the signing or execution layer. A
 
 ## Find EU Tender Opportunities
 
-[Free EU tender sample](https://eu-tender-x402-v3-production.up.railway.app/preview) · [Buyer guide](docs/find-eu-tender-opportunities.md) · [EU procurement API](docs/eu-procurement-api-x402.md) · [Revenue Swarm storefront](https://revenue-swarm.lovable.app/?utm_source=github&utm_medium=organic&utm_campaign=repo_readme)
+[Free EU tender sample](https://eu-tender-x402-v3-production.up.railway.app/preview) · [Buyer guide](docs/find-eu-tender-opportunities.md) · [EU procurement API](docs/eu-procurement-api-x402.md) · [Revenue Swarm storefront](https://revenue-swarm.com/?utm_source=github&utm_medium=organic&utm_campaign=repo_readme)
+
+## Revenue Swarm creative services
+
+Revenue Swarm also operates a live done-for-you creative service for ecommerce, SaaS, apps, creators, agencies and crypto-native brands.
+
+- Main creative storefront: https://revenue-swarm.com/?utm_source=github&utm_medium=organic&utm_campaign=public_repo
+- Crypto creative storefront: https://revenue-swarm.com/crypto?utm_source=github&utm_medium=organic&utm_campaign=public_repo
+- Quick Creative Pack: $9 one-time
+- Creative Test Pack: $29 one-time
+- Weekly Creative Drops: $79/month
+
+The creative-service storefront is separate from this bounty repository and does not affect the code or bounty evidence here.
 
 ## Related live x402 service: Revenue Swarm
 
 The same owner also operates **Revenue Swarm EU Tender Intelligence**, a separate live x402 service for ranked EU public-procurement opportunities sourced from TED. It is not part of the KushBitx bounty codebase; the links below are provided as a related production example of machine-payable data access.
 
-- Human storefront: https://revenue-swarm.lovable.app
+- Human storefront: https://revenue-swarm.com
 - Free live tender preview: https://eu-tender-x402-v3-production.up.railway.app/preview
 - x402 discovery: https://eu-tender-x402-v3-production.up.railway.app/.well-known/x402
 - OpenAPI: https://eu-tender-x402-v3-production.up.railway.app/openapi.json
